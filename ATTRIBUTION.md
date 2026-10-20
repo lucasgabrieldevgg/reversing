@@ -1,0 +1,47 @@
+# Attribution & Sources
+
+`reversing` is an original synthesis commissioned for this repo: the three-mode architecture (triage / deep-dive / solve), the reversing contract, the routing table, and all wording are original merges. Upstream material retains its original license; the synthesis itself is MIT. Licenses below were read directly from the upstream repos cloned on 2026-10-20, except where a caveat is explicitly stated.
+
+## Upstream skills (merged)
+
+| Source | What was merged | License |
+| --- | --- | --- |
+| `zhaoxuya520/reverse-skill` | The backbone: the stage-gated workflow (triage → static → dynamic → synthesis) with explicit exit conditions, the Evidence→Finding evidence-chain discipline, the completion checklist, the loop-prevention and self-supervision rules (same method failing twice = switch approaches), tool-path verification doctrine (never guess paths), the anonymization rule for real-target reports, the read-vs-execute distinction, the default-sandbox-context consent model, and the per-target subskill routing map (APK/.NET/Go/Rust/firmware/malware) that became the targets route table | MIT |
+| `ljagiello/ctf-skills` (ctf-reverse) | The CTF technique corpus: the problem-solving workflow and quick-wins ladder (strings → ltrace/strace → Frida hook → angr → Qiling), the memory-dumping strategy (break at final comparison, dump the computed value), the comparison-direction doctrine, decoy-flag detection, PIE-safe relative breakpoints, the common-crypto-shapes quick judgments, the "never pipe triage output through head" honesty rule with its deliberate-paging correction, the emulation toolset orientation (Unicorn/Qiling/angr/Triton with when-each-beats-the-others), radare2/r2pipe batch-mode patterns, the anti-analysis taxonomy, and the MCP-server orientation for agent-driven RE | MIT |
+| `wshobson/agents` (plugins/reverse-engineering, by Seth Hobson) | The 4-phase methodology (reconnaissance → static → dynamic → documentation), the binary-analysis pattern catalog (control-flow idioms, data-structure recovery from access patterns, function-signature recovery via calling conventions, compiler-artifact warnings, Ghidra/IDAPython scripting examples), the protocol-reverse-engineering workflow (capture → boundaries → structure → fields → spec → validate → fuzz, with scapy/boofuzz patterns and replay with checksum recalculation), the anti-reversing troubleshooting lessons (crash-instead-of-continue when NOP-ing a detection branch; platform-specific anti-debug rebuilds), and the malware-analyst safe-handling phase discipline | MIT |
+| `yaklang/hack-skills` (by VillanCh) | The VM-and-bytecode playbook: dispatcher quick-identification table, the five-step methodology (find dispatcher → map opcodes → extract bytecode → write disassembler → analyze), stack/register/esolang VM pattern tables, the maze-challenge method, VM-protector approaches (VMProtect/Tigress) with the SLEIGH graduation path, the full solving decision tree; the anti-debug technique matrices with reliability ratings and false-positive notes (Linux L1-L14, Windows W1-W19 selection); the obfuscation quick-identification table (symptom → likely defense → start-with) and the packing-vs-obfuscation distinction | MIT |
+| `p4nda0s/reverse-skills` | The raw-load-first Unicorn principle (map bytes without parsing headers, emulate fragments not binaries, minimal-segment parsing only when raw faults), the environment-simulation strategy table (libc/JNI/syscall hooking from Python, fake JNIEnv construction), the iterate-on-crashes method, minimal-trace discipline, the modern-Frida-CLI notes (spawn-resumes-after-load, loader-aware hooking via dlopen interception), and the structure-recovery workflow (cross-function access-pattern collection → layout merge → field naming) | MIT — **caveat**: declared in README.md/README_EN.md ("## License / MIT"); the repo carries no dedicated LICENSE file. Documented here explicitly; treat as author-declared |
+
+## Concept inspiration (pointed, no text merged)
+
+| Source | What was taken | License |
+| --- | --- | --- |
+| `trailofbits/skills` — dwarf-expert | The look-up-the-standard-instead-of-answering-from-memory discipline, prefer-dwarfdump-over-readelf for DWARF work, `--verify` integrity checking, and the attribute-indirection chain warning (resolve `DW_AT_abstract_origin`/`DW_AT_specification` before concluding an attribute is absent). Concepts only — no text, tables, or command listings copied, to keep this repo's MIT synthesis free of CC share-alike obligations. Read their original skill for the full treatment. | CC BY-SA 4.0 |
+
+## Surveyed and excluded (documented, no content merged)
+
+ClawHub-native skills found via `clawhub search` (reverse engineering / ghidra / radare2 / binary analysis / malware analysis / disassembly / decompile / obfuscation / crackme / static analysis, 2026-10-20), installed and studied, but **excluded from merging** because none ships a LICENSE file or license declaration (license-unverified — the same standard that excluded no-license repos in the security skill):
+
+- `@ivangdavila/reverse-engineering` — thoughtful governance structure (boundaries, evidence-ladder, interface-map, deliverables, protocol files); the evidence-ladder *concept* is generic to the field and implemented here fresh; no text merged.
+- `@gandli/ctf-reverse` — a lightly-edited derivative of the ljagiello ctf-reverse corpus (near-identical file set and SKILL.md structure; content covered by merging the ljagiello original under MIT).
+- `@golngod/reverse-engineering-agent` — Chinese-language lawful-analysis agent for SaaS/product due diligence; different center of gravity (public-source analysis, not binary RE).
+- `@deepbitstech/binary-analysis` (Dr.Binary), `@psyb0t/reverse-engineer-anything` (containerized tooling for authorized APKs), `@yxy050208/ctf-web-reverse-audit`, `@solomonneas/malware-analyst`, `@holdyounger/ida-reverse`, `@dinghaibin/reverse-tool` — single-purpose or tool-wrapper skills; nothing merged.
+- `yaklang/hack-skills` skills outside the RE core (reverse-shell-techniques, memory-forensics-volatility, ios-pentesting-tricks, anti-debugging adjacent web items) — out of scope for a reverse-engineering skill (offensive/memory-forensics domains), no content merged; `wshobson` memory-forensics skill surveyed likewise (incident-response domain).
+- `p4nda0s/reverse-skills` remaining subskills (rev-dex-dumper, rev-ios-dump, rev-u3d-dump, rev-symbol, rev-idapython) — tool-specific deep references; their general principles are merged via the five merged items above, the tool-specific flows were not carried.
+
+## Verification work (original to this repo)
+
+- **Landscape survey:** 16 ClawHub search queries (reverse engineering / RE tool terms / CTF reversing / malware / obfuscation / crackme / static analysis) plus the GitHub ecosystem context carried over from the security skill's Task-18 survey; 6 GitHub repos cloned and studied in full (zhaoxuya520/reverse-skill, wshobson/agents, yaklang/hack-skills, trailofbits/skills, ljagiello/ctf-skills, p4nda0s/reverse-skills) and 9 ClawHub-native skills installed and studied before synthesis (2026-10-20).
+- **License verification:** every merged source's license read from the cloned repo — 4 MIT from LICENSE files (zhaoxuya520, wshobson, yaklang, ljagiello), 1 MIT author-declared in README only (p4nda0s, caveated above), 1 CC BY-SA 4.0 handled concept-only (Trail of Bits). The 9 ClawHub-native skills carry no license information anywhere (checked _meta.json and skill-card.md) and were excluded on that basis.
+- **The synthesis itself:** the three-mode architecture, the reversing contract, the routing table, all reference-file structure, and every example written fresh for this repo. Upstream techniques are merged as methodology and doctrine; where command examples appear (gdb/Frida/Unicorn/scapy/boofuzz/Z3/angr idioms), they are the field-standard invocations of public tools, rewritten for this repo's context, not copied listings.
+
+## Individual credits
+
+- **zhaoxuya520** — the stage gates and the Evidence→Finding chain are the spine of this skill; the completion checklist survived nearly verbatim in spirit.
+- **Łukasz Jagiełło (ljagiello)** — the ctf-reverse corpus is the deepest single RE skill in the open ecosystem we surveyed; the memory-dumping strategy and comparison-direction doctrine are the two highest-value ideas in this synthesis, and the "never pipe triage through head" rule is the craft standard every AI agent needs tattooed on its context window.
+- **Seth Hobson (wshobson)** — the cleanest methodology phrasing (recon/static/dynamic/documentation) and the only source whose protocol workflow and anti-reversing troubleshooting survived intact as structure.
+- **VillanCh (yaklang)** — the anti-debug matrices with reliability ratings and false-positive notes, and the VM playbook; "base models fail to recognize fetch-decode-execute" is the exact failure this skill exists to prevent.
+- **p4nda0s** — raw-load-first is the single best emulation idea in the survey; it changes Unicorn from a chore into the fastest path. Author is asked (as with all caveated sources) to consider adding a LICENSE file to make the declaration unambiguous.
+- **Trail of Bits** — for publishing dwarf-expert and the dwarf-expert way of grounding claims in the standard instead of memory; go read the original.
+
+Any errors in the merged synthesis are this repo's, not theirs.

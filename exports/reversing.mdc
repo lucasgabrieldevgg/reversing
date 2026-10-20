@@ -1,0 +1,48 @@
+---
+description: reversing — reverse engineering for AI agents (triage → deep-dive → solve)
+globs:
+alwaysApply: false
+---
+
+# reversing (condensed export)
+
+Full skill: references load on demand in the source repo. This export carries the router + core doctrine.
+
+## The contract
+
+1. **Identify before you interpret** — file/arch/compiler/packer/language named before the first theory
+2. **Cheap before expensive** — strings → strace/ltrace → hook the comparison → symbolic execution → manual reading; escalate one rung only when the current rung fails for a reason you can name
+3. **Let the program compute** — break at the final comparison, dump the computed expected value; reversing the transform is the fallback
+4. **Answer the question asked** — the path between input and the question, not the whole binary
+5. **Prove it or label it** — every claim is a command output with an address, or an explicitly-labeled hypothesis
+6. **Respect the boundary** — authorized targets only; copies, not originals; offline by default; no drift to third-party systems
+
+## Workflow
+
+**Triage** (identify + quick wins → route) → **Static** (map structure, form hypothesis) → **Dynamic** (run it, confirm/refute) → **Synthesis** (answer + evidence). Same method twice-failed = switch approaches (static ↔ dynamic ↔ emulation), never a third identical attempt.
+
+Quick-wins ladder: `strings | grep -iE "flag|key|secret"` → `ltrace ./target` (strcmp args live) → Frida hook on `strcmp`/`memcmp` → angr `explore(find=success, avoid=wrong)` → Qiling/Unicorn → decompiler.
+
+## Killer moves
+
+- **Memory dump**: `start; b *main+0xca` (PIE-safe) → input of right length → `x/s $rsi` — the program computes the answer for you
+- **Comparison direction**: `transform(input)==stored` → invert it; `transform(stored)==input` → the answer IS the transformed blob, apply forward
+- **Decoys**: multiple comparisons = break at the FINAL one
+- **Never pipe triage through `head`** — grep the signal, page deliberately, say which slice you read; an unread tail is never a "no flag" conclusion
+- **Custom VMs**: find the dispatcher (switch/table/if-chain on data-buffer bytes) → map opcodes (value/operation/operands/side-effects) → extract bytecode → write the disassembler → analyze as assembly
+- **Emulation**: Unicorn raw-load-first (no ELF parsing, map bytes, hook libc/JNI/syscalls from Python, iterate on crashes); snapshot contexts = brute-force oracles; Qiling for whole programs; angr for questions; Z3 for check-as-equation
+- **Anti-analysis**: identify the specific check first (matrix in the full skill), bypass least-invasive-first (debugger hiding → operand patch → emulation); NOP-ing a detected-branch can corrupt later state — patch the comparison operand instead; verify simplifiers with random-input equivalence before trusting them
+
+## Scope & safety
+
+Authorized targets only: own binaries, CTF/lab sandboxes, licensed research, malware handled defensively in isolated disposable environments (snapshot, no production, simulated networking). No DRM circumvention, no license bypass, no third-party targeting, no weaponization. Local sandbox is the default assumption — do not interrogate the user — but drift toward unauthorized targets stops and says so.
+
+## Routing (full references in the repo)
+
+the-method (workflow/evidence ladder) · static (disassembly/types/symbols) · dynamic (gdb/Frida/dumping/oracles) · emulation (Unicorn/Qiling/angr/Z3) · anti-analysis (matrices/packers/obfuscation) · custom-vms (VM playbook) · targets (APK/.NET/WASM/Go/firmware/malware routes) · protocols (wire+file formats) · the-report (evidence-grade output)
+
+---
+
+# Sources & attribution
+
+This is a condensed export of the `reversing` skill (github.com/lucasgabrieldevgg/reversing), an original synthesis merging: `zhaoxuya520/reverse-skill` (MIT — stage-gated workflow, evidence discipline, completion checklist), `ljagiello/ctf-skills` (MIT — quick-wins ladder, memory-dumping strategy, comparison-direction doctrine, emulation references, honesty rules), `wshobson/agents` by Seth Hobson (MIT — 4-phase methodology, binary-analysis patterns, protocol workflow, anti-reversing troubleshooting), `yaklang/hack-skills` by VillanCh (MIT — VM/bytecode playbook, anti-debug matrices, obfuscation identification), `p4nda0s/reverse-skills` (MIT, declared in README — raw-load-first Unicorn principle, environment simulation). Concept-only credit: Trail of Bits `dwarf-expert` (CC BY-SA 4.0 — look-up-the-standard discipline, DWARF verification). Full details: ATTRIBUTION.md in the repo. Synthesis license: MIT.
